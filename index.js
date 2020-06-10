@@ -1,11 +1,14 @@
-const Parser = require("rss-parser")
-const fs = require("fs")
+const {
+    bot,
+    testChannelID
+} = require('./bot')
 
-let parser = new Parser()
+const netflix = require('./RSSWebsites/netflix/netflix')
 
-;
-(async () => {
-    let feed = await parser.parseURL("https://newbusinessethiopia.com/topics/economy/feed/")
+let oneHour = 1000 * 60 * 60;
 
-    fs.writeFileSync("./newBusinessEthiopia.json", JSON.stringify(feed), "utf-8")
-})()
+function oneHourFunction() {
+    netflix.fetchAndPost();
+}
+
+setInterval(oneHourFunction, oneHour)
