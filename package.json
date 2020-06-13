@@ -5,12 +5,14 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
-		"start:prod": "NODE_ENV=production nodemon index.js"
+		"dev": "nodemon index.js"
 	},
-	"author": "",
+	"author": "Biruk (MR.Engineer)",
 	"license": "ISC",
 	"dependencies": {
+		"dotenv": "^8.2.0",
 		"rss-parser": "^3.8.0",
 		"telegraf": "^3.38.0"
-	}
+	},
+	"git repository": "https://github.com/MrEngineerET/rss-parser-node-application"
 }
