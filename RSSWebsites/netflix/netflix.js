@@ -3,6 +3,7 @@ const Parser = require("rss-parser")
 const path = require("path")
 
 const bot = require("./../../bot")
+const rssURL = "https://www.whats-on-netflix.com/feed/"
 
 let parser = new Parser()
 exports.fetchAndPost = async () => {
@@ -15,7 +16,7 @@ exports.fetchAndPost = async () => {
         let newNewsFeed = []
         let newLatestNetflixItem = latestNetflixItem
 
-        let feed = await parser.parseURL("https://www.whats-on-netflix.com/feed/")
+        let feed = await parser.parseURL(rssURL)
 
         let items = feed.items.splice(0, 5)
 
@@ -36,11 +37,11 @@ exports.fetchAndPost = async () => {
         if (newNewsFeed.length != 0) {
             let preparedFeeds = prepareFeeds(newNewsFeed)
             preparedFeeds.forEach((item) => {
-                if (item[1]) {
+                if (item[0]) {
                     bot.telegram.sendPhoto(process.env.testGroupID, item[0], {
                         caption: `
                         ${item[1]}`,
-                        parse_mode: "HTML",
+                        // parse_mode: "HTML",
                         reply_markup: {
                             inline_keyboard: [
                                 [{
@@ -81,12 +82,12 @@ let prepareFeeds = function (feeds) {
         imageSrc = feed.content.slice(start, end)
 
         let message = `
-        <u><b>${feed.title}</b></u>
+<u><b>${feed.title}</b></u>
 
-        ${description}
-        photoURL:${imageSrc}
-        sourceURL:${feed.link}$$end
-        `
+${description}
+photoURL:${imageSrc}
+sourceURL:${feed.link}$$end`
+
         return [imageSrc, message]
     })
 }
