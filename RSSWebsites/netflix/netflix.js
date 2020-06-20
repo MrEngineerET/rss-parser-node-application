@@ -5,8 +5,6 @@ const path = require("path")
 const bot = require("./../../bot")
 const rssURL = "https://www.whats-on-netflix.com/feed/"
 
-let varword = "The quick brown fox jumps over the lazy dog"
-
 let parser = new Parser()
 
 let btn = [
