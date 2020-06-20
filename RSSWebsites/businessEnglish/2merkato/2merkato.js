@@ -27,39 +27,81 @@ let btn4noImg = [
 			text: "#Ethiopian_Business_daily",
 			callback_data: "noResponse",
 		},
-	],
-	[
-		{
-			text: "#with_Pic1",
-			callback_data: "post2merkato1",
-		},
-		{
-			text: "#with_Pic2",
-			callback_data: "post2merkato2",
-		},
-		{
-			text: "#with_Pic3",
-			callback_data: "post2merkato3",
-		},
-	],
-	[
-		{
-			text: "#with_Pic4",
-			callback_data: "post2merkato4",
-		},
-		{
-			text: "#with_Pic5",
-			callback_data: "post2merkato5",
-		},
-		{
-			text: "#with_Pic6",
-			callback_data: "post2merkato6",
-		},
-	],
-	[
 		{
 			text: "Remove",
 			callback_data: "remove",
+		},
+	],
+	[
+		{
+			text: "DNEth",
+			callback_data: "DNEth",
+		},
+		{
+			text: "EPEth",
+			callback_data: "EPEth",
+		},
+		{
+			text: "DNInt",
+			callback_data: "DNInt",
+		},
+		{
+			text: "EPInt",
+			callback_data: "EPInt",
+		},
+	],
+	[
+		{
+			text: "NREth",
+			callback_data: "NREth",
+		},
+		{
+			text: "NUEth",
+			callback_data: "NUEth",
+		},
+		{
+			text: "NRInt",
+			callback_data: "NRInt",
+		},
+		{
+			text: "NUInt",
+			callback_data: "NUInt",
+		},
+	],
+	[
+		{
+			text: "BNEth",
+			callback_data: "BNEth",
+		},
+		{
+			text: "BNInt",
+			callback_data: "BNInt",
+		},
+		{
+			text: "Evnt",
+			callback_data: "Evnt",
+		},
+		{
+			text: "Condo",
+			callback_data: "Condo",
+		},
+	],
+	[
+		{
+			text: "Oil",
+			callback_data: "Oil",
+		},
+		{
+			text: "Tech",
+			callback_data: "Tech",
+		},
+		{
+			text: "Transp",
+			callback_data: "Transp",
+		},
+		{
+			text: "Trsm",
+			callback_data: "Trsm",
 		},
 	],
 ]
@@ -74,7 +116,7 @@ let prepareFeeds = function (feeds) {
 			end = feed.content.indexOf(".png")
 		}
 		if (start == -1 || end == -1) {
-			imageLocation = path.join(__dirname, "..", "images", "nopic.jpg")
+			imageLocation = path.join(__dirname, "..", "..", "images", "nopic.jpg")
 			imageSource = "local"
 		} else {
 			end += 4
@@ -150,3 +192,126 @@ exports.fetchAndPost = async function () {
 		console.log(err)
 	}
 }
+bot.bot.action("post2merkato", merkatoChannelPostController)
+
+bot.bot.action("DNEth", merkatoChannelPostController)
+bot.bot.action("EPEth", merkatoChannelPostController)
+bot.bot.action("DNInt", merkatoChannelPostController)
+bot.bot.action("EPInt", merkatoChannelPostController)
+bot.bot.action("NREth", merkatoChannelPostController)
+bot.bot.action("NUEth", merkatoChannelPostController)
+bot.bot.action("NRInt", merkatoChannelPostController)
+bot.bot.action("NUInt", merkatoChannelPostController)
+bot.bot.action("BNEth", merkatoChannelPostController)
+bot.bot.action("BNInt", merkatoChannelPostController)
+bot.bot.action("Evnt", merkatoChannelPostController)
+bot.bot.action("Condo", merkatoChannelPostController)
+bot.bot.action("Oil", merkatoChannelPostController)
+bot.bot.action("Tech", merkatoChannelPostController)
+bot.bot.action("Trans", merkatoChannelPostController)
+bot.bot.action("Trsm", merkatoChannelPostController)
+
+function merkatoChannelPostController(ctx) {
+	ctx.answerCbQuery()
+	const SPLIT = "@#$"
+	let dataArr = ctx.update.callback_query.message.caption.split(SPLIT)
+
+	let title = dataArr[0].replace(/\n+/g, "").replace(/^\s+/g, "")
+	let description = dataArr[1].replace(/\n+/g, "").replace(/^\s+/g, "")
+	let sourceURL = ctx.update.callback_query.message.caption_entities[2].url
+	let photoURL = ctx.update.callback_query.message.caption_entities[3].url
+	let source = "remote"
+
+	let trigger = ctx.update.callback_query.data
+	if (photoURL.includes("nopic")) {
+		source = "local"
+		switch (trigger) {
+			case "DNEth": {
+				photoURL = path.join(__dirname, "..", "..", "images", "DNEth.jpg")
+				break
+			}
+			case "EPEth": {
+				photoURL = path.join(__dirname, "..", "..", "images", "EPEth.jpg")
+				break
+			}
+			case "DNInt": {
+				photoURL = path.join(__dirname, "..", "..", "images", "DNInt.jpg")
+				break
+			}
+			case "EPInt": {
+				photoURL = path.join(__dirname, "..", "..", "images", "EPInt.jpg")
+				break
+			}
+			case "NREth": {
+				photoURL = path.join(__dirname, "..", "..", "images", "NREth.jpg")
+				break
+			}
+			case "NUEth": {
+				photoURL = path.join(__dirname, "..", "..", "images", "NUEth.jpg")
+				break
+			}
+			case "NUInt": {
+				photoURL = path.join(__dirname, "..", "..", "images", "NUInt.jpg")
+				break
+			}
+			case "NRInt": {
+				photoURL = path.join(__dirname, "..", "..", "images", "NRInt.jpg")
+				break
+			}
+			case "BNEth": {
+				photoURL = path.join(__dirname, "..", "..", "images", "BNEth.jpg")
+				break
+			}
+			case "BNInt": {
+				photoURL = path.join(__dirname, "..", "..", "images", "BNInt.jpg")
+				break
+			}
+			case "Evnt": {
+				photoURL = path.join(__dirname, "..", "..", "images", "Evnt.jpg")
+				break
+			}
+			case "Trans": {
+				photoURL = path.join(__dirname, "..", "..", "images", "Trans.jpg")
+				break
+			}
+			case "Trsm": {
+				photoURL = path.join(__dirname, "..", "..", "images", "Trsm.jpg")
+				break
+			}
+			case "Tech": {
+				photoURL = path.join(__dirname, "..", "..", "images", "Tech.jpg")
+				break
+			}
+			case "Oil": {
+				photoURL = path.join(__dirname, "..", "..", "images", "Oil.jpg")
+				break
+			}
+			case "Condo": {
+				photoURL = path.join(__dirname, "..", "..", "images", "Condo.jpg")
+				break
+			}
+		}
+	}
+	let caption = {
+		title,
+		description,
+		photoURL,
+		sourceURL,
+		to: "toChannel",
+	}
+	let data = {
+		photo: {
+			source,
+			location: photoURL,
+		},
+		chatID: -1001448681325,
+		caption,
+	}
+	bot.post(data).catch((err) => {
+		console.log(err)
+	})
+
+	ctx.deleteMessage()
+}
+
+function merkatoPostControllerInner(ctx, num) {}

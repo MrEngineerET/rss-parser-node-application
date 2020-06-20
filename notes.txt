@@ -8,6 +8,7 @@
 data structure for posts
 
 data {
+    ID: unique id
     caption: Object,
     photo:{
         source: String  // either 'remote' or 'local'

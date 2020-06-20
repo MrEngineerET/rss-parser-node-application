@@ -30,7 +30,7 @@ let prepareFeeds = function (feeds) {
 			end = feed.content.indexOf(".png")
 		}
 		if (start == -1 || end == -1) {
-			imageLocation = path.join(__dirname, "nopic.jpg")
+			imageLocation = path.join(__dirname, "..", "..", "images", "nopic.jpg")
 			imageSource = "local"
 		} else {
 			end += 4
@@ -103,4 +103,41 @@ exports.fetchAndPost = async () => {
 	} catch (err) {
 		console.log(err)
 	}
+}
+
+bot.bot.action("postNetflix", netflixPostToChannel)
+function netflixPostToChannel(ctx) {
+	const SPLIT = "@#$"
+	let dataArr = ctx.update.callback_query.message.caption.split(SPLIT)
+
+	let title = dataArr[0].replace(/\n+/g, "").replace(/^\s+/g, "")
+	let description = dataArr[1].replace(/\n+/g, "").replace(/^\s+/g, "")
+	let sourceURL = ctx.update.callback_query.message.caption_entities[2].url
+	let photoURL = ctx.update.callback_query.message.caption_entities[3].url
+	let source = "remote"
+	if (photoURL == "nopic.jpg") {
+		photoURL = path.join(__dirname, "netflix.jpg")
+		source = "local"
+	}
+	let caption = {
+		title,
+		description,
+		photoURL,
+		sourceURL,
+		to: "toChannel",
+	}
+	let data = {
+		photo: {
+			source,
+			location: photoURL,
+		},
+		chatID: -1001448681325,
+		caption,
+	}
+
+	bot.post(data).catch((err) => {
+		console.log(err)
+	})
+
+	ctx.deleteMessage()
 }
