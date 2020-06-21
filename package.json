@@ -13,6 +13,7 @@
 	"dependencies": {
 		"dotenv": "^8.2.0",
 		"rss-parser": "^3.8.0",
+		"shortid": "^2.2.15",
 		"telegraf": "^3.38.0"
 	},
 	"git repository": "https://github.com/MrEngineerET/rss-parser-node-application"

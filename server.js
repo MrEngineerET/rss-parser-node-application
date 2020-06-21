@@ -41,7 +41,7 @@ const merkato2 = require("./RSSWebsites/businessEnglish/2merkato/2merkato")
 // 	setInterval(oneMinuteFunction, oneMinute)
 // }
 
-// merkato2.fetchAndPost()
-netflix.fetchAndPost()
+merkato2.fetchAndPost()
+// netflix.fetchAndPost()
 
 bot.launch()
