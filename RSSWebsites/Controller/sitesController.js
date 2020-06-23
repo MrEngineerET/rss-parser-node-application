@@ -1,27 +1,19 @@
 const fs = require("fs")
 const path = require("path")
 
-const Parser = require("rss-parser")
 const shortid = require("shortid")
 
-const bot = require("../../../bot")
-const siteController = require("./../../Controller/sitesController")
-
-const rssURL = "http://fetchrss.com/rss/5ecc08fa8a93f878358b45675ecc085c8a93f86a2e8b4567.xml"
-
-const latestItem = path.join(__dirname, "latest2merkatoItem.json")
-const dbJSON = path.join(__dirname, "..", "..", "..", "data", "NEWS.json")
-let parser = new Parser()
+const dbJSON = path.join(__dirname, "..", "..", "data", "NEWS.json")
 
 // button for posts with their own image
-let btn = [
+let btnBusiness = [
 	[
 		{ text: "#Ethiopian_Business_Daily", callback_data: "post2merkato" },
 		{ text: "remove", callback_data: "remove" },
 	],
 ]
 // button for posts without their own image
-let btn4noImg = [
+let btn4noImgBusiness = [
 	[
 		{
 			text: "#Ethiopian_Business_daily",
@@ -106,7 +98,30 @@ let btn4noImg = [
 	],
 ]
 
-let prepareFeeds = function (feeds) {
+let btnNetflix = [
+	[
+		{
+			text: "#Netflix_Addis",
+			callback_data: "postNetflix",
+		},
+		{
+			text: "remove",
+			callback_data: "remove",
+		},
+	],
+]
+
+exports.saveFeeds = function (feeds) {
+	data = JSON.parse(fs.readFileSync(dbJSON), "utf-8")
+	feeds.forEach((feed) => {
+		data.push(feed)
+	})
+	fs.writeFileSync(dbJSON, JSON.stringify(data), "utf-8", (err) => {
+		console.log(err)
+	})
+}
+
+exports.prepareFeeds = function (feeds, source) {
 	return feeds.map((feed) => {
 		let imageLocation = ""
 		let imageSource = ""
@@ -116,7 +131,7 @@ let prepareFeeds = function (feeds) {
 			end = feed.content.indexOf(".png")
 		}
 		if (start == -1 || end == -1) {
-			imageLocation = path.join(__dirname, "..", "..", "..", "data", "images", "nopic.jpg")
+			imageLocation = path.join(__dirname, "..", "..", "data", "images", "nopic.jpg")
 			imageSource = "local"
 		} else {
 			end += 4
@@ -124,13 +139,22 @@ let prepareFeeds = function (feeds) {
 			imageSource = "remote"
 		}
 
+		let buttons = imageSource == "remote" ? btnBusiness : btn4noImgBusiness
+		let description = feed.content.slice(feed.content.indexOf("</p>") + 4).trim()
+		if (source == "netflix") {
+			buttons = btnNetflix
+		} else if (source == "2merkato") {
+			description = feed.contentSnippet.replace("(Feed generated with FetchRSS)", "").trim()
+		}
+
 		let caption = {
 			title: feed.title,
-			description: feed.contentSnippet.replace("(Feed generated with FetchRSS)", "").trim(),
-			date: feed.pubDate.slice(0, feed.pubDate.indexOf("2020")).trim(),
+			description,
+			// date: feed.date,
 			to: "toGroup",
 			__id: shortid.generate(),
 		}
+
 		let data = {
 			caption,
 			photo: {
@@ -138,53 +162,9 @@ let prepareFeeds = function (feeds) {
 				location: imageLocation,
 			},
 			chatID: process.env.testGroupID,
-			buttons: imageSource == "remote" ? btn : btn4noImg,
+			buttons,
 			sourceURL: feed.link,
 		}
-
 		return data
 	})
-}
-
-exports.fetchAndPost = async function () {
-	console.log("2merkato In")
-	try {
-		let latest2MerkatoItem = JSON.parse(fs.readFileSync(latestItem, "utf-8"))
-
-		let latest2merkatoItemTitle = latest2MerkatoItem.title
-
-		let newNewsFeed = []
-		let newLatest2merkatoItem = latest2MerkatoItem
-
-		let feed = await parser.parseURL(rssURL)
-
-		let items = feed.items.splice(0, 5)
-
-		let latest = true
-		for (let i = 0; i < items.length; i++) {
-			if (items[i].title != latest2merkatoItemTitle) {
-				newNewsFeed.push(items[i])
-				if (latest) {
-					newLatest2merkatoItem = items[i]
-					latest = false
-				}
-			} else {
-				break
-			}
-		}
-
-		if (newNewsFeed.length != 0) {
-			let preparedFeeds = prepareFeeds(newNewsFeed, "2merkato")
-			siteController.saveFeeds(preparedFeeds)
-			preparedFeeds.forEach((item) => {
-				bot.post(item).catch((err) => {
-					console.log(err)
-				})
-			})
-		}
-
-		fs.writeFileSync(latestItem, JSON.stringify(newLatest2merkatoItem), "utf-8")
-	} catch (err) {
-		console.log(err)
-	}
 }
