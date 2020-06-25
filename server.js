@@ -10,6 +10,7 @@ const newBusinessEthiopia = require("./RSSWebsites/businessEnglish/newBusinessEt
 const furtherafrica = require("./RSSWebsites/businessEnglish/furtherafrica/furtherafrica")
 const ethiopianmonitor = require("./RSSWebsites/businessEnglish/ethiopianmonitor/ethiopianmonitor")
 const merkato2 = require("./RSSWebsites/businessEnglish/2merkato/2merkato")
+const bankexchange = require("./RSSWebsites/businessEnglish/bank-exchange/bankExchange")
 
 if (process.env.NODE_ENV == "production") {
 	netflix.fetchAndPost()
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV == "production") {
 	let fourHour = 1000 * 60 * 60 * 4
 	let fiveHour = 1000 * 60 * 60 * 5
 	let sixHour = 1000 * 60 * 60 * 6
+	let twentyfourHour = 1000 * 60 * 60 * 24
 
 	function oneHourFunction() {
 		netflix.fetchAndPost()
@@ -57,6 +59,12 @@ if (process.env.NODE_ENV == "production") {
 		merkato2.fetchAndPost()
 	}
 	setInterval(sixHourFunction, sixHour + fifteenMinute)
+
+	function twentyfourHourfunction(){
+		bankexchange.fetchAndPost()
+	}
+	setInterval(twentyfourHourfunction, twentyfourHour)
+
 }
 
 // if (process.env.NODE_ENV === "development") {
