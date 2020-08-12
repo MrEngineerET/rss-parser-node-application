@@ -145,8 +145,7 @@ let prepareFeeds = function (feeds) {
 		let caption = {
 			title: feed.title,
 			description: feed.contentSnippet.trim(),
-			via: 'The Reporter Magazines',
-			date: feed.date,
+			// date: feed.date,
 			to: 'toGroup',
 			__id: shortid.generate(),
 		}
@@ -191,15 +190,25 @@ exports.fetchAndPost = async () => {
 		if (newNEWS.length != 0) {
 			let preparedFeeds = prepareFeeds(newNEWS)
 			siteController.saveFeeds(preparedFeeds)
+
+			let count = 0
 			preparedFeeds.forEach(item => {
-				bot.post(item).catch(err => {
-					console.log(err)
-				})
+				bot
+					.post(item)
+					.then(() => {
+						++count
+						console.log(`${count}: the reporter`)
+						if (count == 5) {
+							titles = JSON.parse(fs.readFileSync(latestTitles, 'utf-8'))
+							titles[titles.findIndex(el => el.website == website)].latestTitle = latestTitle
+							fs.writeFileSync(latestTitles, JSON.stringify(titles), 'utf-8')
+						}
+					})
+					.catch(err => {
+						console.log('eroorrrr')
+					})
 			})
 		}
-		titles = JSON.parse(fs.readFileSync(latestTitles, 'utf-8'))
-		titles[titles.findIndex(el => el.website == website)].latestTitle = latestTitle
-		fs.writeFileSync(latestTitles, JSON.stringify(titles), 'utf-8')
 	} catch (err) {
 		console.log(err)
 	}
