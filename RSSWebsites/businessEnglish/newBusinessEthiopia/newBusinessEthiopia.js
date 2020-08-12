@@ -145,6 +145,9 @@ let prepareFeeds = function (feeds) {
 			title: feed.title,
 			description: feed.contentSnippet.trim(),
 			// date: feed.date,
+			footer: `ስለ ቢዝነስ ብቻ የምንዘግብበትን 
+Special Channel ተቀላቀሉ⬇️
+@Ethiopianbusinessdaily`,
 			to: 'toGroup',
 			__id: shortid.generate(),
 		}

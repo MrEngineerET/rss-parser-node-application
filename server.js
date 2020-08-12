@@ -3,6 +3,7 @@ require('dotenv').config({
 })
 const { bot } = require('./bot')
 
+const moneyExchange = require('./RSSWebsites/EthiopianMoneyExchange/ETBExg')
 const netflix = require('./RSSWebsites/netflix/netflix')
 const thereportermagazines = require('./RSSWebsites/businessEnglish/thereportermagazines/thereportermagazines')
 const addisFortune = require('./RSSWebsites/businessEnglish/addisFortune/addisFortune')
@@ -11,28 +12,49 @@ const furtherafrica = require('./RSSWebsites/businessEnglish/furtherafrica/furth
 const ethiopianmonitor = require('./RSSWebsites/businessEnglish/ethiopianmonitor/ethiopianmonitor')
 const merkato2 = require('./RSSWebsites/businessEnglish/2merkato/2merkato')
 
-if (process.env.NODE_ENV === 'development') {
-	let fiveSec = 5 * 1000
-	merkato2.fetchAndPost()
+let fiveSec = 5 * 1000
+
+bot.command('part1', ctx => {
 	setTimeout(() => {
-		addisFortune.fetchAndPost()
+		furtherafrica.fetchAndPost()
 		setTimeout(() => {
-			netflix.fetchAndPost()
+			thereportermagazines.fetchAndPost()
 			setTimeout(() => {
-				ethiopianmonitor.fetchAndPost()
-				setTimeout(() => {
-					newBusinessEthiopia.fetchAndPost()
-					setTimeout(() => {
-						thereportermagazines.fetchAndPost()
-						setTimeout(() => {
-							furtherafrica.fetchAndPost()
-						}, fiveSec)
-					}, fiveSec)
-				}, fiveSec)
+				newBusinessEthiopia.fetchAndPost()
 			}, fiveSec)
 		}, fiveSec)
 	}, fiveSec)
-}
+})
+bot.command('part2', ctx => {
+	setTimeout(() => {
+		addisFortune.fetchAndPost()
+		setTimeout(() => {
+			setTimeout(() => {
+				ethiopianmonitor.fetchAndPost()
+			}, fiveSec)
+		}, fiveSec)
+	}, fiveSec)
+})
+bot.command('part3', ctx => {
+	setTimeout(() => {
+		merkato2.fetchAndPost()
+		setTimeout(() => {
+			netflix.fetchAndPost()
+		}, fiveSec)
+	}, fiveSec)
+})
+bot.command('money', ctx => {
+	moneyExchange.fetchAndPost()
+})
 
-console.log('servers started ...')
-bot.launch()
+// bot.launch()
+
+exports.handler = (event, context, callback) => {
+	const tmp = JSON.parse(event.body) // get data passed to us
+	bot.handleUpdate(tmp) // make Telegraf process that data
+	return callback(null, {
+		// return something for webhook, so it doesn't try to send same stuff again
+		statusCode: 200,
+		body: '',
+	})
+}

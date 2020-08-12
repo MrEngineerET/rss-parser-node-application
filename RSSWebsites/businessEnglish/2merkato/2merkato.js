@@ -145,6 +145,9 @@ let prepareFeeds = function (feeds) {
 			title: feed.title,
 			description: feed.contentSnippet.replace('(Feed generated with FetchRSS)', '').trim(),
 			date: feed.pubDate.slice(0, feed.pubDate.indexOf('2020')).trim(),
+			footer: `ስለ ቢዝነስ ብቻ የምንዘግብበትን 
+Special Channel ተቀላቀሉ⬇️
+@Ethiopianbusinessdaily`,
 			to: 'toGroup',
 			__id: shortid.generate(),
 		}

@@ -45,6 +45,13 @@ let prepareFeeds = function (feeds) {
 		let caption = {
 			title: feed.title,
 			description: feed.contentSnippet.trim(),
+			footer: `<b>"Stay Home, Stay Safe"</b>
+
+Contact - @NetflixAddis_CustomerService
+
+Join, Buy and Watch Netflix
+		  🍿🍿🍿🍿🍿
+		 @NetflixAddiss`,
 			// date: feed.date,
 			to: 'toGroup',
 			__id: shortid.generate(),
@@ -89,7 +96,27 @@ exports.fetchAndPost = async () => {
 		if (newNEWS.length != 0) {
 			let preparedFeeds = prepareFeeds(newNEWS)
 			siteController.saveFeeds(preparedFeeds)
+			let initialFeed = {
+				caption: {
+					title: '',
+					description: `🍿What is new?🍿
 
+May 28, 2020 on Netflix.
+									
+"Stay Home, Stay Safe"`,
+					footer: `@NetflixAddiss`,
+					to: 'toGroup',
+					id: shortid.generate(),
+				},
+				photo: {
+					source: './../../data/images/netflixAddis.jpg',
+					location: 'local',
+				},
+				chatID: process.env.testGroupID,
+				buttons: btn,
+				// buttons: btn,
+				sourceURL: feed.link,
+			}
 			let count = 0
 			preparedFeeds.forEach(item => {
 				bot
