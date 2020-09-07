@@ -2,11 +2,9 @@
 	"name": "rss-parser-application",
 	"version": "1.0.0",
 	"description": "",
-	"main": "server.js",
+	"main": "index.js",
 	"scripts": {
-		"start": "node server.js",
-		"dev": "node server.js",
-		"debug": "node server.js"
+		"start": "node server.js"
 	},
 	"author": "Biruk (MR.Engineer)",
 	"license": "ISC",
