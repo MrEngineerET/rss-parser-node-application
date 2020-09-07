@@ -12,6 +12,7 @@ const ethiopianmonitor = require('./RSSWebsites/businessEnglish/ethiopianmonitor
 const merkato2 = require('./RSSWebsites/businessEnglish/2merkato/2merkato')
 const moneyExchange = require('./RSSWebsites/EthiopianMoneyExchange/ETBExg')
 
+require('./restart')()
 if (process.env.NODE_ENV == 'production') {
 	netflix.fetchAndPost()
 	merkato2.fetchAndPost()
@@ -124,6 +125,10 @@ bot.command('part3', ctx => {
 })
 bot.command('money', ctx => {
 	moneyExchange.fetchAndPost()
+})
+
+bot.command('restart', ctx => {
+	require('./restart')()
 })
 
 bot.launch()
